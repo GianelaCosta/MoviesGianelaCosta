@@ -6,7 +6,6 @@ import android.net.NetworkCapabilities
 import android.os.Build
 import android.util.Log
 import androidx.annotation.RequiresApi
-import com.example.movies.data.DataSource
 import com.example.movies.data.model.Movie
 import com.example.movies.data.model.MovieEntity
 import com.example.movies.data.model.Review

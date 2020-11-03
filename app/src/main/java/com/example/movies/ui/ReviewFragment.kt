@@ -1,11 +1,11 @@
 package com.example.movies.ui
 
 import android.os.Bundle
-import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.Toast
+import androidx.fragment.app.Fragment
 import androidx.fragment.app.viewModels
 import androidx.lifecycle.Observer
 import androidx.recyclerview.widget.DividerItemDecoration
@@ -13,21 +13,27 @@ import androidx.recyclerview.widget.LinearLayoutManager
 import com.bumptech.glide.Glide
 import com.example.movies.AppDatabase
 import com.example.movies.R
-import com.example.movies.data.DataSource
+import com.example.movies.data.DataSourceImp
 import com.example.movies.data.model.Movie
 import com.example.movies.domain.RepoImpl
 import com.example.movies.ui.viewModel.ReviewViewModel
 import com.example.movies.ui.viewModel.VMFactory
 import com.example.movies.vo.Resource
-import kotlinx.android.synthetic.main.fragment_detail.*
 import kotlinx.android.synthetic.main.fragment_review.*
-import kotlinx.android.synthetic.main.fragment_review.img_movie
 
 
 class ReviewFragment : Fragment() {
 
-    private val viewModel by viewModels<ReviewViewModel>{ VMFactory(RepoImpl(DataSource(AppDatabase.getDatabase(requireActivity().applicationContext))))  }
-    private  lateinit var movie: Movie
+    private val viewModel by viewModels<ReviewViewModel> {
+        VMFactory(
+            RepoImpl(
+                DataSourceImp(
+                    AppDatabase.getDatabase(requireActivity().applicationContext)
+                )
+            )
+        )
+    }
+    private lateinit var movie: Movie
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)

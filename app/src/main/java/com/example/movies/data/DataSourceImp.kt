@@ -4,24 +4,25 @@ import com.example.movies.AppDatabase
 import com.example.movies.data.model.Movie
 import com.example.movies.data.model.MovieEntity
 import com.example.movies.data.model.Review
+import com.example.movies.domain.DataSource
 import com.example.movies.vo.Resource
 import com.example.movies.vo.RetrofitClient
 
-class DataSource(private val appDatabase: AppDatabase) {
+class DataSourceImp(private val appDatabase: AppDatabase) : DataSource {
 
-    suspend fun getMovies(): Resource<List<Movie>> {
+    override suspend fun getMovies(): Resource<List<Movie>> {
         return Resource.Success(RetrofitClient.webservice.getMovies().moviesList)
     }
 
-    suspend fun getReviews(movieId: String): Resource<List<Review>> {
+    override suspend fun getReviews(movieId: String): Resource<List<Review>> {
         return Resource.Success(RetrofitClient.webservice.getReviews(movieId).reviewsList)
     }
 
-    suspend fun getSavedMovies(): Resource.Success<List<MovieEntity>> {
+    override suspend fun getSavedMovies(): Resource.Success<List<MovieEntity>> {
         return Resource.Success(appDatabase.movieDao().getAllMovies())
     }
 
-    suspend fun insertMovieRoom(movie: MovieEntity) {
+    override suspend fun insertMovieRoom(movie: MovieEntity) {
         appDatabase.movieDao().insertMovie(movie)
     }
 }

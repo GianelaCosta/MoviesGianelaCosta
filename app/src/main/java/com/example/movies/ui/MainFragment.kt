@@ -1,26 +1,29 @@
- package com.example.movies.ui
+package com.example.movies.ui
 
- import android.os.Bundle
- import android.view.LayoutInflater
- import android.view.View
- import android.view.ViewGroup
- import android.widget.Toast
- import androidx.fragment.app.Fragment
- import androidx.fragment.app.viewModels
- import androidx.lifecycle.Observer
- import androidx.navigation.fragment.findNavController
- import androidx.recyclerview.widget.GridLayoutManager
- import androidx.recyclerview.widget.RecyclerView
- import com.example.movies.AppDatabase
- import com.example.movies.R
- import com.example.movies.data.DataSource
- import com.example.movies.data.model.Movie
- import com.example.movies.data.model.MovieEntity
- import com.example.movies.domain.RepoImpl
- import com.example.movies.ui.MainAdapter.OnMovieClickListener
- import com.example.movies.ui.viewModel.MainViewModel
- import com.example.movies.ui.viewModel.VMFactory
- import com.example.movies.vo.Resource
+import android.content.Context
+import android.net.ConnectivityManager
+import android.os.Bundle
+import android.view.LayoutInflater
+import android.view.View
+import android.view.ViewGroup
+import android.widget.Toast
+import androidx.appcompat.app.AppCompatActivity
+import androidx.fragment.app.Fragment
+import androidx.fragment.app.viewModels
+import androidx.lifecycle.Observer
+import androidx.navigation.fragment.findNavController
+import androidx.recyclerview.widget.GridLayoutManager
+import androidx.recyclerview.widget.RecyclerView
+import com.example.movies.AppDatabase
+import com.example.movies.R
+import com.example.movies.data.DataSourceImp
+import com.example.movies.data.model.Movie
+import com.example.movies.data.model.MovieEntity
+import com.example.movies.domain.RepoImpl
+import com.example.movies.ui.MainAdapter.OnMovieClickListener
+import com.example.movies.ui.viewModel.MainViewModel
+import com.example.movies.ui.viewModel.VMFactory
+import com.example.movies.vo.Resource
 import kotlinx.android.synthetic.main.fragment_main.*
 
  class MainFragment : Fragment(), OnMovieClickListener {
@@ -28,7 +31,7 @@ import kotlinx.android.synthetic.main.fragment_main.*
      private val viewModel by viewModels<MainViewModel> {
          VMFactory(
              RepoImpl(
-                 DataSource(
+                 DataSourceImp(
                      AppDatabase.getDatabase(
                          requireActivity().applicationContext
                      )
@@ -81,17 +84,36 @@ import kotlinx.android.synthetic.main.fragment_main.*
                  is Resource.Success -> {
                      progressBar.visibility = View.GONE
                      downloadMoviesList(result.data)
+                     rv_movies.adapter = MainAdapter(requireContext(), result.data, this)
                  }
                  is Resource.Failure -> {
                      progressBar.visibility = View.GONE
-                     Toast.makeText(
-                         requireContext(),
-                         "An error occurred while loading data ${result.exception}",
-                         Toast.LENGTH_LONG
-                     ).show()
+                     if (!verifyAvailableNetwork(requireActivity() as AppCompatActivity)) {
+                         displayFromLocal()
+                         Toast.makeText(
+                             requireContext(),
+                             "You don't have internet connection, showing saved data form your last section",
+                             Toast.LENGTH_LONG
+                         ).show()
+                     } else
+                         Toast.makeText(
+                             requireContext(),
+                             "An error occurred while loading data ${result.exception}, showing saved data form your last section",
+                             Toast.LENGTH_LONG
+                         ).show()
                  }
              }
          })
+     }
+
+     fun verifyAvailableNetwork(activity: AppCompatActivity): Boolean {
+         val connectivityManager =
+             activity.getSystemService(Context.CONNECTIVITY_SERVICE) as ConnectivityManager
+         val networkInfo = connectivityManager.activeNetworkInfo
+         return networkInfo != null && networkInfo.isConnected
+     }
+
+     private fun displayFromLocal() {
          // display room content
          viewModel.fetchDownloadedMoviesList().observe(viewLifecycleOwner, Observer { result ->
              when (result) {
@@ -125,7 +147,6 @@ import kotlinx.android.synthetic.main.fragment_main.*
              }
          })
      }
-
 
      override fun onMovieClick(movie: Movie) {
          val bundle = Bundle()
