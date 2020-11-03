@@ -13,7 +13,7 @@
         android:gravity="center"
         android:layout_width="60dp"
         android:layout_height="60dp"
-        android:background="@drawable/ic_reviewer_avatar"
+        android:background="@drawable/ic_round_textview"
         tools:text="J"/>
 
     <LinearLayout

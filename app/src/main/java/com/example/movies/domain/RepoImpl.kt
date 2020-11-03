@@ -3,17 +3,14 @@ package com.example.movies.domain
 import android.content.Context
 import android.net.ConnectivityManager
 import android.net.NetworkCapabilities
-import android.net.NetworkInfo
 import android.os.Build
 import android.util.Log
 import androidx.annotation.RequiresApi
-import androidx.appcompat.app.AppCompatActivity
 import com.example.movies.data.DataSource
 import com.example.movies.data.model.Movie
 import com.example.movies.data.model.MovieEntity
 import com.example.movies.data.model.Review
 import com.example.movies.vo.Resource
-import java.util.*
 
 class RepoImpl(private val dataSource: DataSource): Repo {
 
@@ -21,12 +18,12 @@ class RepoImpl(private val dataSource: DataSource): Repo {
         return dataSource.getMovies()
    }
 
-    override suspend fun getReviewsList(movieId: Int): Resource<List<Review>> {
+    override suspend fun getReviewsList(movieId: String): Resource<List<Review>> {
         return dataSource.getReviews(movieId)
     }
 
-    override suspend fun getSavedMoviesList(): List<MovieEntity> {
-       return dataSource.getSavedMovies()
+    override suspend fun getSavedMoviesList(): Resource<List<MovieEntity>> {
+        return dataSource.getSavedMovies()
     }
 
     override suspend fun insertMovie(movie: MovieEntity) {

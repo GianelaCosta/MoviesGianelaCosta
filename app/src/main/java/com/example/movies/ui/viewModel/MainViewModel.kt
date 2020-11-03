@@ -8,7 +8,6 @@ import com.example.movies.domain.Repo
 import com.example.movies.vo.Resource
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
-import java.lang.Exception
 
 class MainViewModel(private val repo: Repo): ViewModel(){
 
@@ -16,14 +15,23 @@ class MainViewModel(private val repo: Repo): ViewModel(){
         emit(Resource.Loading())
         try {
            emit(repo.getMoviesList())
-        }catch (e: Exception){
+        } catch (e: Exception) {
             emit(Resource.Failure(e))
         }
     }
 
-    fun saveMovie(movie: MovieEntity){
+    fun saveMovie(movie: MovieEntity) {
         viewModelScope.launch {
             repo.insertMovie(movie)
+        }
+    }
+
+    fun fetchDownloadedMoviesList() = liveData(Dispatchers.IO) {
+        emit(Resource.Loading())
+        try {
+            emit(repo.getSavedMoviesList())
+        } catch (e: Exception) {
+            emit(Resource.Failure(e))
         }
     }
 }

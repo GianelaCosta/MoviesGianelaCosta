@@ -10,7 +10,7 @@ import kotlinx.android.parcel.Parcelize
 @Parcelize
 data class Movie(
     @SerializedName("id")
-    val id: Int = 0,
+    val id: String = "",
     @SerializedName("backdrop_path")
     val backdropPath: String = "",
     @SerializedName("poster_path")
@@ -22,7 +22,9 @@ data class Movie(
     @SerializedName("vote_average")
     val rate: Float = 0F,
     @SerializedName("popularity")
-    val popularity: String = ""
+    val popularity: String = "",
+    @SerializedName("release_date")
+    val releaseDate: String = ""
 ): Parcelable
 
 data class MoviesList(
@@ -37,7 +39,7 @@ data class MovieEntity(
     @ColumnInfo(name = "movie_backdrop_path")
     val backdropPath: String = "",
     @ColumnInfo(name = "movie_poster_path")
-     val imagePath: String = "",
+    val imagePath: String = "",
     @ColumnInfo(name = "movie_title")
     val name: String = "",
     @ColumnInfo(name = "movie_overview")
@@ -45,7 +47,9 @@ data class MovieEntity(
     @ColumnInfo(name = "movie_vote_average")
     val rate: Float = 0F,
     @ColumnInfo(name = "movie_popularity")
-    val popularity: String = ""
+    val popularity: String = "",
+    @ColumnInfo(name = "release_date")
+    val releaseDate: String = ""
 )
 
 

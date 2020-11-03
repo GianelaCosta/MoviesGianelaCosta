@@ -11,5 +11,5 @@ interface WebService {
   suspend fun getMovies(): MoviesList
 
   @GET("movie/{id}/reviews?")
-  suspend fun getReviews(@Path("id") id: Int?):ReviewsList
+  suspend fun getReviews(@Path("id") id: String?): ReviewsList
 }

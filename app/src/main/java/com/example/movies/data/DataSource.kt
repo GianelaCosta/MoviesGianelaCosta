@@ -9,19 +9,19 @@ import com.example.movies.vo.RetrofitClient
 
 class DataSource(private val appDatabase: AppDatabase) {
 
-    suspend fun getMovies(): Resource<List<Movie>>{
+    suspend fun getMovies(): Resource<List<Movie>> {
         return Resource.Success(RetrofitClient.webservice.getMovies().moviesList)
     }
 
-    suspend fun getReviews(movieId: Int): Resource<List<Review>>{
+    suspend fun getReviews(movieId: String): Resource<List<Review>> {
         return Resource.Success(RetrofitClient.webservice.getReviews(movieId).reviewsList)
     }
 
-    suspend fun getSavedMovies(): List<MovieEntity>{
-        return appDatabase.movieDao().getAllMovies()
+    suspend fun getSavedMovies(): Resource.Success<List<MovieEntity>> {
+        return Resource.Success(appDatabase.movieDao().getAllMovies())
     }
 
-    suspend fun insertMovieRoom(movie: MovieEntity){
+    suspend fun insertMovieRoom(movie: MovieEntity) {
         appDatabase.movieDao().insertMovie(movie)
     }
 }
