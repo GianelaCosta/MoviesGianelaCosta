@@ -39,30 +39,10 @@ class MainFragment : Fragment(), OnMovieClickListener {
         return inflater.inflate(R.layout.fragment_main, container, false)
     }
 
-//    override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
-//        super.onViewCreated(view, savedInstanceState)
-//        setupRecyclerView()
-//        viewModel.fetchMoviesList.observe(viewLifecycleOwner, Observer { result->
-//            when(result){
-//                is Resource.Loading -> {
-//                    progressBar.visibility = View.VISIBLE
-//                }
-//                is Resource.Success -> {
-//                    progressBar.visibility = View.GONE
-//                    downloadMoviesList(result.data)
-//                    rv_movies.adapter = MainAdapter(requireContext(), result.data, this)
-//                }
-//                is Resource.Failure -> {
-//                    progressBar.visibility = View.GONE
-//                    Toast.makeText(requireContext(), "An error occurred while loading data ${result.exception}", Toast.LENGTH_LONG).show()
-//                }
-//            }
-//        })
-//    }
-
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
         setupRecyclerView()
+        viewModel.deleteExpiredDownloadedMovies()
         // Fetch from server
         viewModel.fetchMoviesList.observe(viewLifecycleOwner, Observer { result ->
             when (result) {

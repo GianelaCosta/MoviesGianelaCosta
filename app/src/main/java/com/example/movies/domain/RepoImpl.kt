@@ -1,15 +1,10 @@
 package com.example.movies.domain
 
-import android.content.Context
-import android.net.ConnectivityManager
-import android.net.NetworkCapabilities
-import android.os.Build
-import android.util.Log
-import androidx.annotation.RequiresApi
 import com.example.movies.data.model.Movie
 import com.example.movies.data.model.MovieEntity
 import com.example.movies.data.model.Review
 import com.example.movies.vo.Resource
+import java.util.concurrent.TimeUnit
 import javax.inject.Inject
 
 class RepoImpl @Inject constructor(private val dataSource: DataSource) : Repo {
@@ -30,25 +25,13 @@ class RepoImpl @Inject constructor(private val dataSource: DataSource) : Repo {
         dataSource.insertMovieRoom(movie)
     }
 
-    @RequiresApi(Build.VERSION_CODES.M)
-    fun isOnline(context: Context): Boolean {
-        val connectivityManager = context.getSystemService(Context.CONNECTIVITY_SERVICE) as ConnectivityManager
-        if (connectivityManager != null) {
-            val capabilities =
-                connectivityManager.getNetworkCapabilities(connectivityManager.activeNetwork)
-            if (capabilities != null) {
-                if (capabilities.hasTransport(NetworkCapabilities.TRANSPORT_CELLULAR)) {
-                    Log.i("Internet", "NetworkCapabilities.TRANSPORT_CELLULAR")
-                    return true
-                } else if (capabilities.hasTransport(NetworkCapabilities.TRANSPORT_WIFI)) {
-                    Log.i("Internet", "NetworkCapabilities.TRANSPORT_WIFI")
-                    return true
-                } else if (capabilities.hasTransport(NetworkCapabilities.TRANSPORT_ETHERNET)) {
-                    Log.i("Internet", "NetworkCapabilities.TRANSPORT_ETHERNET")
-                    return true
-                }
+    override suspend fun deleteMovie() {
+        val expireTime = TimeUnit.HOURS.toMillis(24)
+        val moviesList = dataSource.getSavedMovies().data
+        for (movie in moviesList) {
+            if (movie.createdTime < System.currentTimeMillis() - expireTime) {
+                dataSource.deleteMovieRoom(movie)
             }
         }
-        return false
     }
 }

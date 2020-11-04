@@ -10,4 +10,5 @@ interface DataSource {
     suspend fun getReviews(movieId: String): Resource<List<Review>>
     suspend fun getSavedMovies(): Resource.Success<List<MovieEntity>>
     suspend fun insertMovieRoom(movie: MovieEntity)
+    suspend fun deleteMovieRoom(movie: MovieEntity)
 }

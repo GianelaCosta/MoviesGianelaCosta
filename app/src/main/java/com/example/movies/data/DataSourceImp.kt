@@ -26,4 +26,8 @@ class DataSourceImp @Inject constructor(private val movieDao: MovieDao) : DataSo
     override suspend fun insertMovieRoom(movie: MovieEntity) {
         movieDao.insertMovie(movie)
     }
+
+    override suspend fun deleteMovieRoom(movie: MovieEntity) {
+        movieDao.deleteMovie(movie)
+    }
 }

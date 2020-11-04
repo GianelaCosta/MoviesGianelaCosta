@@ -33,7 +33,10 @@ class MainAdapter(
 
     override fun onBindViewHolder(holder: BaseViewHolder<*>, position: Int) {
         when (holder) {
-            is MainViewHolder -> holder.bind(moviesList[position], position)
+            is MainViewHolder -> holder.bind(
+                moviesList.sortedByDescending { it.rate }[position],
+                position
+            )
         }
     }
 

@@ -35,4 +35,10 @@ class MainViewModel @ViewModelInject constructor(private val repo: Repo) : ViewM
             emit(Resource.Failure(e))
         }
     }
+
+    fun deleteExpiredDownloadedMovies() {
+        viewModelScope.launch {
+            repo.deleteMovie()
+        }
+    }
 }

@@ -10,4 +10,5 @@ interface Repo {
     suspend fun getReviewsList(movieId: String): Resource<List<Review>>
     suspend fun getSavedMoviesList(): Resource<List<MovieEntity>>
     suspend fun insertMovie(movie: MovieEntity)
+    suspend fun deleteMovie()
 }

@@ -24,7 +24,8 @@ data class Movie(
     @SerializedName("popularity")
     val popularity: String = "",
     @SerializedName("release_date")
-    val releaseDate: String = ""
+    val releaseDate: String = "",
+    val createdTime: Long = 0
 ): Parcelable
 
 data class MoviesList(
@@ -49,7 +50,9 @@ data class MovieEntity(
     @ColumnInfo(name = "movie_popularity")
     val popularity: String = "",
     @ColumnInfo(name = "release_date")
-    val releaseDate: String = ""
+    val releaseDate: String = "",
+    @ColumnInfo(name = "created_time")
+    val createdTime: Long = System.currentTimeMillis()
 )
 
 
