@@ -12,7 +12,7 @@ const val API_KEY = "52b7001946c183203509dceff3469d89"
 
 object RetrofitClient {
 
-    val requestInterceptor = Interceptor { chain ->
+    private val requestInterceptor = Interceptor { chain ->
 
         val url = chain.request()
             .url()
@@ -27,12 +27,12 @@ object RetrofitClient {
         return@Interceptor chain.proceed(request)
     }
 
-    val client = OkHttpClient.Builder()
+    private val client: OkHttpClient = OkHttpClient.Builder()
         .addInterceptor(requestInterceptor)
         .addNetworkInterceptor(StethoInterceptor())
         .build()
 
-    val webservice by lazy {
+    val webservice: WebService by lazy {
         Retrofit.Builder()
             .client(client)
             .baseUrl("https://api.themoviedb.org/3/")

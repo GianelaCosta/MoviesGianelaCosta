@@ -10,12 +10,13 @@ import com.example.movies.data.model.Movie
 import com.example.movies.data.model.MovieEntity
 import com.example.movies.data.model.Review
 import com.example.movies.vo.Resource
+import javax.inject.Inject
 
-class RepoImpl(private val dataSource: DataSource): Repo {
+class RepoImpl @Inject constructor(private val dataSource: DataSource) : Repo {
 
     override suspend fun getMoviesList(): Resource<List<Movie>> {
         return dataSource.getMovies()
-   }
+    }
 
     override suspend fun getReviewsList(movieId: String): Resource<List<Review>> {
         return dataSource.getReviews(movieId)

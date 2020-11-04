@@ -11,28 +11,17 @@ import androidx.lifecycle.Observer
 import androidx.recyclerview.widget.DividerItemDecoration
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.bumptech.glide.Glide
-import com.example.movies.AppDatabase
 import com.example.movies.R
-import com.example.movies.data.DataSourceImp
 import com.example.movies.data.model.Movie
-import com.example.movies.domain.RepoImpl
 import com.example.movies.ui.viewModel.ReviewViewModel
-import com.example.movies.ui.viewModel.VMFactory
 import com.example.movies.vo.Resource
+import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.android.synthetic.main.fragment_review.*
 
-
+@AndroidEntryPoint
 class ReviewFragment : Fragment() {
 
-    private val viewModel by viewModels<ReviewViewModel> {
-        VMFactory(
-            RepoImpl(
-                DataSourceImp(
-                    AppDatabase.getDatabase(requireActivity().applicationContext)
-                )
-            )
-        )
-    }
+    private val viewModel by viewModels<ReviewViewModel>()
     private lateinit var movie: Movie
 
     override fun onCreate(savedInstanceState: Bundle?) {

@@ -1,19 +1,24 @@
 package com.example.movies.ui
 
 import android.os.Bundle
-import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import androidx.fragment.app.Fragment
+import androidx.fragment.app.viewModels
 import androidx.navigation.fragment.findNavController
 import com.bumptech.glide.Glide
 import com.example.movies.R
 import com.example.movies.data.model.Movie
+import com.example.movies.ui.viewModel.MainViewModel
+import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.android.synthetic.main.fragment_detail.*
 
+@AndroidEntryPoint
 class DetailFragment : Fragment() {
 
-    private  lateinit var movie: Movie
+    private val viewModel by viewModels<MainViewModel>()
+    private lateinit var movie: Movie
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
