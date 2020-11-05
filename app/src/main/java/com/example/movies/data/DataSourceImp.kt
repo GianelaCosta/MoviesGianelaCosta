@@ -15,7 +15,7 @@ class DataSourceImp @Inject constructor(private val movieDao: MovieDao) : DataSo
         return Resource.Success(RetrofitClient.webservice.getMovies().moviesList)
     }
 
-    override suspend fun getReviews(movieId: String): Resource<List<Review>> {
+    override suspend fun getReviews(movieId: Int): Resource<List<Review>> {
         return Resource.Success(RetrofitClient.webservice.getReviews(movieId).reviewsList)
     }
 

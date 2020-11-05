@@ -13,7 +13,7 @@ class RepoImpl @Inject constructor(private val dataSource: DataSource) : Repo {
         return dataSource.getMovies()
     }
 
-    override suspend fun getReviewsList(movieId: String): Resource<List<Review>> {
+    override suspend fun getReviewsList(movieId: Int): Resource<List<Review>> {
         return dataSource.getReviews(movieId)
     }
 

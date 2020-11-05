@@ -10,7 +10,7 @@ import kotlinx.android.parcel.Parcelize
 @Parcelize
 data class Movie(
     @SerializedName("id")
-    val id: String = "",
+    val id: Int = 1,
     @SerializedName("backdrop_path")
     val backdropPath: String = "",
     @SerializedName("poster_path")
@@ -36,7 +36,7 @@ data class MoviesList(
 @Entity(tableName = "moviesEntity")
 data class MovieEntity(
     @PrimaryKey
-    val id: String,
+    val id: Int,
     @ColumnInfo(name = "movie_backdrop_path")
     val backdropPath: String = "",
     @ColumnInfo(name = "movie_poster_path")
