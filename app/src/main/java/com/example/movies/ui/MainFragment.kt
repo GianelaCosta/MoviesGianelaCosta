@@ -55,26 +55,17 @@ class MainFragment : Fragment(), OnMovieClickListener {
                     rv_movies.adapter = MainAdapter(requireContext(), result.data, this)
                 }
                 is Resource.Failure -> {
-                    progressBar.visibility = View.GONE
                     if (!verifyAvailableNetwork(requireActivity() as AppCompatActivity)) {
                         displayFromLocal()
-                        Toast.makeText(
-                            requireContext(),
-                            "You don't have internet connection, showing saved data form your last section",
-                            Toast.LENGTH_LONG
-                        ).show()
+                        manageResourceFailure("You don't have internet connection, showing saved data form your last section")
                     } else
-                        Toast.makeText(
-                            requireContext(),
-                            "An error occurred while loading data ${result.exception}, showing saved data form your last section",
-                            Toast.LENGTH_LONG
-                        ).show()
+                        manageResourceFailure("An error occurred while loading data ${result.exception}, showing saved data form your last section")
                 }
             }
         })
     }
 
-    fun verifyAvailableNetwork(activity: AppCompatActivity): Boolean {
+    private fun verifyAvailableNetwork(activity: AppCompatActivity): Boolean {
         val connectivityManager =
             activity.getSystemService(Context.CONNECTIVITY_SERVICE) as ConnectivityManager
         val networkInfo = connectivityManager.activeNetworkInfo
@@ -105,15 +96,19 @@ class MainFragment : Fragment(), OnMovieClickListener {
                     rv_movies.adapter = MainAdapter(requireContext(), list, this)
                 }
                 is Resource.Failure -> {
-                    progressBar.visibility = View.GONE
-                    Toast.makeText(
-                        requireContext(),
-                        "An error occurred while loading data ${result.exception}",
-                        Toast.LENGTH_LONG
-                    ).show()
+                    manageResourceFailure("An error occurred while loading data ${result.exception}")
                 }
             }
         })
+    }
+
+    private fun manageResourceFailure(message: String) {
+        progressBar.visibility = View.GONE
+        Toast.makeText(
+            requireContext(),
+            message,
+            Toast.LENGTH_SHORT
+        ).show()
     }
 
     override fun onMovieClick(movie: Movie) {

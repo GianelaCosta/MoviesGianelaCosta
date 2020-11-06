@@ -3,6 +3,7 @@ package com.example.movies.data
 import com.example.movies.data.model.Movie
 import com.example.movies.data.model.MovieEntity
 import com.example.movies.data.model.Review
+import com.example.movies.data.model.ReviewEntity
 import com.example.movies.domain.DataSource
 import com.example.movies.domain.MovieDao
 import com.example.movies.vo.Resource
@@ -23,8 +24,18 @@ class DataSourceImp @Inject constructor(private val movieDao: MovieDao) : DataSo
         return Resource.Success(movieDao.getAllMovies())
     }
 
+    override suspend fun getSavedReviews(movieId: Int): Resource.Success<List<ReviewEntity>> {
+        return Resource.Success(movieDao.getMovieReviews(movieId))
+    }
+
     override suspend fun insertMovieRoom(movie: MovieEntity) {
         movieDao.insertMovie(movie)
+    }
+
+    override suspend fun insertReviewsRoom(reviewsList: List<ReviewEntity>) {
+        for (review in reviewsList) {
+            movieDao.insertReview(review)
+        }
     }
 
     override suspend fun deleteMovieRoom(movie: MovieEntity) {
