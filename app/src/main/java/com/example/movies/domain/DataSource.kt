@@ -8,10 +8,13 @@ import com.example.movies.vo.Resource
 
 interface DataSource {
     suspend fun getMovies(): Resource<List<Movie>>
+    suspend fun getMovieDetail(movieId: Int): Resource<Movie>
     suspend fun getReviews(movieId: Int): Resource<List<Review>>
     suspend fun getSavedMovies(): Resource.Success<List<MovieEntity>>
+    suspend fun getSavedMovieDetail(movieId: Int): Resource<MovieEntity>
     suspend fun getSavedReviews(movieId: Int): Resource.Success<List<ReviewEntity>>
     suspend fun insertMovieRoom(movie: MovieEntity)
+    suspend fun insertMovieDetailRoom(movie: MovieEntity)
     suspend fun insertReviewsRoom(reviewsList: List<ReviewEntity>)
     suspend fun deleteMovieRoom(movie: MovieEntity)
 }

@@ -90,7 +90,8 @@ class MainFragment : Fragment(), OnMovieClickListener {
                             it.description,
                             it.rate,
                             it.popularity,
-                            it.releaseDate
+                            it.releaseDate,
+                            listOf()
                         )
                     }
                     rv_movies.adapter = MainAdapter(requireContext(), list, this)
@@ -133,7 +134,8 @@ class MainFragment : Fragment(), OnMovieClickListener {
                     movie.description,
                     movie.rate,
                     movie.popularity,
-                    movie.releaseDate
+                    movie.releaseDate,
+                    movie.genres
                 )
             )
         }

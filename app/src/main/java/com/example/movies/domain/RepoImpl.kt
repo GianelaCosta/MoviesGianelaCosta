@@ -14,6 +14,10 @@ class RepoImpl @Inject constructor(private val dataSource: DataSource) : Repo {
         return dataSource.getMovies()
     }
 
+    override suspend fun getMovieDetail(movieId: Int): Resource<Movie> {
+        return dataSource.getMovieDetail(movieId)
+    }
+
     override suspend fun getReviewsList(movieId: Int): Resource<List<Review>> {
         return dataSource.getReviews(movieId)
     }
@@ -22,12 +26,20 @@ class RepoImpl @Inject constructor(private val dataSource: DataSource) : Repo {
         return dataSource.getSavedMovies()
     }
 
+    override suspend fun getSavedMovieDetail(movieId: Int): Resource<MovieEntity> {
+        return dataSource.getSavedMovieDetail(movieId)
+    }
+
     override suspend fun getSavedReviewsList(movieId: Int): Resource<List<ReviewEntity>> {
         return dataSource.getSavedReviews(movieId)
     }
 
     override suspend fun insertMovie(movie: MovieEntity) {
         dataSource.insertMovieRoom(movie)
+    }
+
+    override suspend fun insertMovieDetail(movie: MovieEntity) {
+        dataSource.insertMovieDetailRoom(movie)
     }
 
     override suspend fun insertReviews(reviewsList: List<ReviewEntity>) {

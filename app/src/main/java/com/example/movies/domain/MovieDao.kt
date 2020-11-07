@@ -12,8 +12,14 @@ interface MovieDao {
     @Query("SELECT * FROM reviewsEntity WHERE movie_id = :movieId")
     suspend fun getMovieReviews(movieId: Int): List<ReviewEntity>
 
-    @Insert(onConflict = OnConflictStrategy.REPLACE)
+    @Query("SELECT * FROM moviesEntity WHERE id = :movieId")
+    suspend fun getMovieDetail(movieId: Int): MovieEntity
+
+    @Insert(onConflict = OnConflictStrategy.IGNORE)
     suspend fun insertMovie(movie: MovieEntity)
+
+    @Insert(onConflict = OnConflictStrategy.REPLACE)
+    suspend fun insertMovieDetail(movie: MovieEntity)
 
     @Insert(onConflict = OnConflictStrategy.REPLACE)
     suspend fun insertReview(review: ReviewEntity)

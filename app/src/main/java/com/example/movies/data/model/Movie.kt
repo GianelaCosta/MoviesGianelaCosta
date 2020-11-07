@@ -7,6 +7,7 @@ import androidx.room.PrimaryKey
 import com.google.gson.annotations.SerializedName
 import kotlinx.android.parcel.Parcelize
 
+
 @Parcelize
 data class Movie(
     @SerializedName("id")
@@ -25,7 +26,8 @@ data class Movie(
     val popularity: String = "",
     @SerializedName("release_date")
     val releaseDate: String = "",
-    val createdTime: Long = 0
+    @SerializedName("genres")
+    val genres: List<Genre>? = listOf()
 ): Parcelable
 
 data class MoviesList(
@@ -51,8 +53,11 @@ data class MovieEntity(
     val popularity: String = "",
     @ColumnInfo(name = "release_date")
     val releaseDate: String = "",
+    @ColumnInfo(name = "genres")
+    val genres: List<Genre>?,
     @ColumnInfo(name = "created_time")
     val createdTime: Long = System.currentTimeMillis()
 )
+
 
 

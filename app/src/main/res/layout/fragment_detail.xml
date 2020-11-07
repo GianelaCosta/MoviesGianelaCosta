@@ -48,8 +48,15 @@
                 android:id="@+id/movie_popularity"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_marginTop="35dp"
+                android:layout_marginTop="20dp"
                 tools:text="no of people watching" />
+
+            <TextView
+                android:id="@+id/movie_genres"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="15dp"
+                tools:text="genres" />
 
             <LinearLayout
                 android:layout_width="match_parent"
@@ -96,6 +103,20 @@
         android:layout_marginBottom="25dp"
         android:layout_centerInParent="true"
         android:layout_alignParentBottom="true"
-        android:text="Show Reviews"/>
+        android:text="Show Reviews" />
+
+    <RelativeLayout
+        android:id="@+id/progressBarMovieDetail"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:visibility="gone">
+
+        <ProgressBar
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_centerInParent="true" />
+
+    </RelativeLayout>
 
 </RelativeLayout>
+
