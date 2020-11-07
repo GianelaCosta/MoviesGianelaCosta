@@ -100,7 +100,7 @@ class ReviewFragment : Fragment() {
                     }
                     is Resource.Success -> {
                         progressBar.visibility = View.GONE
-                        val list = result.data.map {
+                        val list = result.data.map { it ->
                             Review(
                                 it.id,
                                 it.reviewer,

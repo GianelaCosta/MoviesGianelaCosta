@@ -27,7 +27,8 @@ data class Movie(
     @SerializedName("release_date")
     val releaseDate: String = "",
     @SerializedName("genres")
-    val genres: List<Genre>? = listOf()
+    val genres: List<Genre>? = listOf(),
+    val createdTime: Long = System.currentTimeMillis()
 ): Parcelable
 
 data class MoviesList(
