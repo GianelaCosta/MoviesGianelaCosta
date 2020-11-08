@@ -1,32 +1,27 @@
 package com.example.movies.ui
 
 import android.os.Bundle
-import androidx.navigation.NavController
-import androidx.navigation.Navigation
 import androidx.test.espresso.Espresso.onView
-import androidx.test.espresso.action.ViewActions.click
+import androidx.test.espresso.assertion.ViewAssertions
+import androidx.test.espresso.matcher.ViewMatchers
 import androidx.test.espresso.matcher.ViewMatchers.withId
 import androidx.test.filters.MediumTest
-import androidx.test.internal.runner.junit4.AndroidJUnit4ClassRunner
+import com.example.domain.FakeMovieData
 import com.example.launchFragmentInHiltContainer
 import com.example.movies.R
-import com.example.movies.data.model.Genre
-import com.example.movies.data.model.Movie
 import dagger.hilt.android.testing.HiltAndroidRule
 import dagger.hilt.android.testing.HiltAndroidTest
+import kotlinx.android.synthetic.main.fragment_review.*
 import kotlinx.coroutines.ExperimentalCoroutinesApi
 import org.junit.Before
 import org.junit.Rule
 import org.junit.Test
-import org.junit.runner.RunWith
-import org.mockito.Mockito.mock
-import org.mockito.Mockito.verify
 
 @MediumTest
 @HiltAndroidTest
 @ExperimentalCoroutinesApi
-@RunWith(AndroidJUnit4ClassRunner::class)
 class ReviewFragmentTest {
+
     @get: Rule
     val hiltRule = HiltAndroidRule(this)
 
@@ -35,33 +30,20 @@ class ReviewFragmentTest {
         hiltRule.inject()
     }
 
-    @Test
-    fun clickOnMovie_navigateToDetailFragment() {
-        val navController = mock(NavController::class.java)
+    private val movie = FakeMovieData.movieList[0]
 
-        val movie = Movie(
-            724989,
-            "https://image.tmdb.org/t/p/w500/86L8wqGMDbwURPni2t7FQ0nDjsH.jpg",
-            "https://image.tmdb.org/t/p/w500/ugZW8ocsrfgI95pnQ7wrmKDxIe.jpg",
-            "Hard Kill",
-            "he work of billionaire tech CEO Donovan Chalmers is so valuable that he hires mercenaries to protect it, and a terrorist group kidnaps his daughter just to get it.",
-            4.8F,
-            "2115001",
-            "2020-10-23",
-            listOf<Genre>()
-        )
+    private val reviewList = FakeMovieData.reviewList
+
+    @Test
+    fun displayNumberOfReviews() {
         val bundle = Bundle()
         bundle.putParcelable("movie", movie)
 
-        launchFragmentInHiltContainer<DetailFragment>(bundle) {
-            Navigation.setViewNavController(requireView(), navController)
+        launchFragmentInHiltContainer<ReviewFragment>(bundle) {
+            txt_reviews_found.text = "reviews(" + reviewList.size + ")"
         }
 
-        onView(withId(R.id.btn_show_reviews)).perform(click())
-
-        verify(navController).navigate(
-            R.id.action_detailFragment_to_revirewFragment
-        )
+        onView(withId(R.id.txt_reviews_found))
+            .check(ViewAssertions.matches(ViewMatchers.withText("reviews(2)")))
     }
-
 }

@@ -100,6 +100,9 @@ class ReviewFragment : Fragment() {
                     }
                     is Resource.Success -> {
                         progressBar.visibility = View.GONE
+                        Glide.with(this).load("https://image.tmdb.org/t/p/w500" + movie.imagePath)
+                            .fitCenter().into(img_movie)
+                        txt_reviews_found.text = "reviews(" + result.data.size + ")"
                         val list = result.data.map { it ->
                             Review(
                                 it.id,
