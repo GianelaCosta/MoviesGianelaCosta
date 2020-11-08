@@ -54,10 +54,10 @@ class DetailFragment : Fragment() {
                 }
                 is Resource.Failure -> {
                     if (!verifyAvailableNetwork(requireActivity() as AppCompatActivity)) {
-                        manageResourceFailure("You don't have internet connection, showing saved data form your last section")
+                        manageResourceFailure(getString(R.string.no_internet_connection_message))
                         displayFromLocal()
                     } else
-                        manageResourceFailure("An error occurred while loading data ${result.exception}")
+                        manageResourceFailure(getString(R.string.error_message, result.exception))
                 }
             }
         })
@@ -103,7 +103,7 @@ class DetailFragment : Fragment() {
                         displayContent(movie)
                     }
                     is Resource.Failure -> {
-                        manageResourceFailure("An error occurred while loading data ${result.exception}")
+                        manageResourceFailure(getString(R.string.error_message, result.exception))
                     }
                 }
             })
@@ -127,12 +127,12 @@ class DetailFragment : Fragment() {
 
     private fun displayContent(movie: Movie) {
         progressBarMovieDetail.visibility = View.GONE
-        Glide.with(this).load("https://image.tmdb.org/t/p/w500" + movie.backdropPath).centerCrop()
+        Glide.with(this).load(getString(R.string.image_base_url, movie.backdropPath)).centerCrop()
             .into(img_movie_backdrop)
-        Glide.with(this).load("https://image.tmdb.org/t/p/w500" + movie.imagePath).fitCenter()
+        Glide.with(this).load(getString(R.string.image_base_url, movie.imagePath)).fitCenter()
             .into(img_movie)
         movie_title.text = movie.name
-        movie_popularity.text = movie.popularity + " people watching"
+        movie_popularity.text = getString(R.string.popularity_text, movie.popularity)
         var genresText = ""
         for (genre in movie.genres!!) {
             genresText += " " + genre.genreName

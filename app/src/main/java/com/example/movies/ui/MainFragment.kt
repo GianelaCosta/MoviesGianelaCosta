@@ -57,9 +57,9 @@ class MainFragment : Fragment(), OnMovieClickListener {
                 is Resource.Failure -> {
                     if (!verifyAvailableNetwork(requireActivity() as AppCompatActivity)) {
                         displayFromLocal()
-                        manageResourceFailure("You don't have internet connection, showing saved data form your last section")
+                        manageResourceFailure(getString(R.string.no_internet_connection_message))
                     } else
-                        manageResourceFailure("An error occurred while loading data ${result.exception}, showing saved data form your last section")
+                        manageResourceFailure(getString(R.string.reviews_label, result.exception))
                 }
             }
         })
@@ -97,7 +97,7 @@ class MainFragment : Fragment(), OnMovieClickListener {
                     rv_movies.adapter = MainAdapter(requireContext(), list, this)
                 }
                 is Resource.Failure -> {
-                    manageResourceFailure("An error occurred while loading data ${result.exception}")
+                    manageResourceFailure(getString(R.string.reviews_label, result.exception))
                 }
             }
         })

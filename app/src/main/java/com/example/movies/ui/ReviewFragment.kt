@@ -57,7 +57,8 @@ class ReviewFragment : Fragment() {
                     progressBar.visibility = View.GONE
                     Glide.with(this).load("https://image.tmdb.org/t/p/w500" + movie.imagePath)
                         .fitCenter().into(img_movie)
-                    txt_reviews_found.text = "reviews(" + result.data.size + ")"
+                    txt_reviews_found.text =
+                        getString(R.string.reviews_label, result.data.size.toString())
                     rv_reviews.adapter = ReviewAdapter(requireContext(), result.data)
                 }
                 is Resource.Failure -> {
@@ -102,7 +103,8 @@ class ReviewFragment : Fragment() {
                         progressBar.visibility = View.GONE
                         Glide.with(this).load("https://image.tmdb.org/t/p/w500" + movie.imagePath)
                             .fitCenter().into(img_movie)
-                        txt_reviews_found.text = "reviews(" + result.data.size + ")"
+                        txt_reviews_found.text =
+                            getString(R.string.reviews_label, result.data.size.toString())
                         val list = result.data.map { it ->
                             Review(
                                 it.id,

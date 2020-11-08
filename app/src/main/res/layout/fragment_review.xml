@@ -19,7 +19,7 @@
             android:layout_alignBottom="@+id/img_movie"
             android:textSize="20sp"
             android:textStyle="bold"
-            android:text="Reviews(%1$s!)" />
+            android:text="@string/reviews_label" />
 
         <ImageView
             android:id="@+id/img_movie"
