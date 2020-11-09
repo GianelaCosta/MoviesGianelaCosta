@@ -43,7 +43,6 @@ class DetailFragmentTest {
 
         onView(withId(R.id.movie_title))
             .check(matches(withText("Demon Slayer: Kimetsu no Yaiba - The Movie: Mugen Train")))
-
     }
 
     @Test
@@ -52,13 +51,25 @@ class DetailFragmentTest {
         bundle.putParcelable("movie", movie)
 
         launchFragmentInHiltContainer<DetailFragment>(bundle) {
-            movie_popularity.text = movie.popularity + " people watching"
+            movie_popularity.text = getString(R.string.popularity_text, movie.popularity)
         }
 
         onView(withId(R.id.movie_popularity))
             .check(matches(withText("1986559 people watching")))
     }
 
+    @Test
+    fun displayMovieRate() {
+        val bundle = Bundle()
+        bundle.putParcelable("movie", movie)
+
+        launchFragmentInHiltContainer<DetailFragment>(bundle) {
+            movie_ratingNo.text = movie.rate.toString()
+        }
+
+        onView(withId(R.id.movie_ratingNo))
+            .check(matches(withText("6.7")))
+    }
 
     @Test
     fun displayMovieGenres() {
@@ -77,20 +88,6 @@ class DetailFragmentTest {
             .check(matches(withText(" action drama")))
     }
 
-
-    @Test
-    fun displayMovieRate() {
-        val bundle = Bundle()
-        bundle.putParcelable("movie", movie)
-
-        launchFragmentInHiltContainer<DetailFragment>(bundle) {
-            movie_ratingNo.text = movie.rate.toString()
-        }
-
-        onView(withId(R.id.movie_ratingNo))
-            .check(matches(withText("6.7")))
-    }
-
     @Test
     fun displayMovieDescription() {
         val bundle = Bundle()
@@ -104,6 +101,12 @@ class DetailFragmentTest {
             .check(matches(withText("Tanjirō Kamado, joined with Inosuke Hashibira, a boy raised by boars who wears a boar's head, and Zenitsu Agatsuma, a scared boy who reveals his true power when he sleeps, boards the Infinity Train on a new mission with the Fire Hashira, Kyōjurō Rengoku, to defeat a demon who has been tormenting the people and killing the demon slayers who oppose it!")))
     }
 
+    /**
+     * Unfortunately could't make navigation tests to work, it is a matter of how hilt injects the
+     * dependencies, I am not able to set a test viewModel so data is not fetch and view does not load,
+     * also navConroller is null even I am using a mock
+     */
+
 //    @Test
 //    fun clickOnMovie_navigateToDetailFragment() {
 //        val navController = mock(NavController::class.java)
@@ -111,41 +114,30 @@ class DetailFragmentTest {
 //        bundle.putParcelable("movie", movie)
 //
 //        launchFragmentInHiltContainer<DetailFragment>(bundle) {
+//            navController.setGraph(R.navigation.main_graph)
 //            Navigation.setViewNavController(requireView(), navController)
 //        }
 //
 //        onView(withId(R.id.btn_show_reviews)).perform(click())
 //
 //        verify(navController).navigate(
-//            R.id.action_detailFragment_to_revirewFragment
-//        )
+//            R.id.action_detailFragment_to_revirewFragment)
 //    }
-//
 //
 //    @Test
 //    fun pressBackButton_popBackStack() {
-//        val navController = mock(NavController::class.java)
+//    val bundle = Bundle()
+//    bundle.putParcelable("movie", movie)
+//    val navController = Mockito.mock(NavController::class.java)
 //
-//        val movie = Movie(
-//            724989,
-//            "https://image.tmdb.org/t/p/w500/86L8wqGMDbwURPni2t7FQ0nDjsH.jpg",
-//            "https://image.tmdb.org/t/p/w500/ugZW8ocsrfgI95pnQ7wrmKDxIe.jpg",
-//            "Hard Kill",
-//            "he work of billionaire tech CEO Donovan Chalmers is so valuable that he hires mercenaries to protect it, and a terrorist group kidnaps his daughter just to get it.",
-//            4.8F,
-//            "2115001",
-//            "2020-10-23",
-//            listOf<Genre>()
-//        )
-//        val bundle = Bundle()
-//        bundle.putParcelable("movie", movie)
+//    launchFragmentInHiltContainer<DetailFragment>(bundle) {
+//        navController.setGraph(R.navigation.main_graph)
+//        Navigation.setViewNavController(requireView(), navController)}
 //
-//        launchFragmentInHiltContainer<DetailFragment>(bundle) {
-//            Navigation.setViewNavController(requireView(), navController)
-//        }
+//    navController.navigate(R.id.action_detailFragment_to_revirewFragment, bundle)
+//    onView(withId(R.id.revirewFragment)).perform(ViewActions.pressBack())
 //
-//        pressBack()
-//        verify(navController).popBackStack()
+//    assertThat(navController.currentDestination?.displayName).isEqualTo(R.id.detailFragment)
 //    }
 }
 

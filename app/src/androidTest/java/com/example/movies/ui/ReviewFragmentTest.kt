@@ -46,4 +46,13 @@ class ReviewFragmentTest {
         onView(withId(R.id.txt_reviews_found))
             .check(ViewAssertions.matches(ViewMatchers.withText("reviews(2)")))
     }
+
+    /**
+     * Unfortunately could't test further this fragment is correctly displayed
+     * or make navigation tests to work, from one side found that there are many
+     * work around to test recyclerviews with espresso but no one worked, in addition
+     * due to how hilt injects the dependencies navigation testing was not possible
+     */
+
 }
+
