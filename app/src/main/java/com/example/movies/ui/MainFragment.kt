@@ -1,7 +1,5 @@
 package com.example.movies.ui
 
-import android.content.Context
-import android.net.ConnectivityManager
 import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
@@ -96,13 +94,6 @@ class MainFragment : Fragment(), OnMovieClickListener {
                 }
             }
         })
-    }
-
-    private fun verifyAvailableNetwork(activity: AppCompatActivity): Boolean {
-        val connectivityManager =
-            activity.getSystemService(Context.CONNECTIVITY_SERVICE) as ConnectivityManager
-        val networkInfo = connectivityManager.activeNetworkInfo
-        return networkInfo != null && networkInfo.isConnected
     }
 
     private fun manageResourceFailure(message: String) {
