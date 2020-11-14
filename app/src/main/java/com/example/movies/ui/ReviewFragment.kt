@@ -47,29 +47,7 @@ class ReviewFragment : Fragment() {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
         setupRecyclerView()
-        viewModel.fetchReviewsList(movie.id).observe(viewLifecycleOwner, Observer { result ->
-            when (result) {
-                is Resource.Loading -> {
-                    progressBar.visibility = View.VISIBLE
-                }
-                is Resource.Success -> {
-                    downloadMovieReviews(result.data)
-                    progressBar.visibility = View.GONE
-                    Glide.with(this).load("https://image.tmdb.org/t/p/w500" + movie.imagePath)
-                        .fitCenter().into(img_movie)
-                    txt_reviews_found.text =
-                        getString(R.string.reviews_label, result.data.size.toString())
-                    rv_reviews.adapter = ReviewAdapter(requireContext(), result.data)
-                }
-                is Resource.Failure -> {
-                    if (!verifyAvailableNetwork(requireActivity() as AppCompatActivity)) {
-                        displayFromLocal()
-                        manageResourceFailure("You don't have internet connection, showing saved data form your last section")
-                    } else
-                        manageResourceFailure("An error occurred while loading data ${result.exception}")
-                }
-            }
-        })
+        fetchFromServer(movie.id)
     }
 
     private fun setupRecyclerView() {
@@ -82,18 +60,30 @@ class ReviewFragment : Fragment() {
         )
     }
 
-    private fun manageResourceFailure(message: String) {
-        progressBar.visibility = View.GONE
-        Toast.makeText(
-            requireContext(),
-            message,
-            Toast.LENGTH_SHORT
-        ).show()
+    private fun fetchFromServer(movieId: Int) {
+        viewModel.fetchReviewsList(movieId).observe(viewLifecycleOwner, Observer { result ->
+            when (result) {
+                is Resource.Loading -> {
+                    progressBar.visibility = View.VISIBLE
+                }
+                is Resource.Success -> {
+                    downloadMovieReviews(result.data)
+                    displayFromLocal(movieId)
+                }
+                is Resource.Failure -> {
+                    if (!verifyAvailableNetwork(requireActivity() as AppCompatActivity)) {
+                        displayFromLocal(movieId)
+                        manageResourceFailure("You don't have internet connection, showing saved data form your last section")
+                    } else
+                        manageResourceFailure("An error occurred while loading data ${result.exception}")
+                }
+            }
+        })
     }
 
-    private fun displayFromLocal() {
-        // display room content
-        viewModel.fetchDownloadedReviewsList(movie.id)
+
+    private fun displayFromLocal(movieId: Int) {
+        viewModel.fetchDownloadedReviewsList(movieId)
             .observe(viewLifecycleOwner, Observer { result ->
                 when (result) {
                     is Resource.Loading -> {
@@ -137,6 +127,15 @@ class ReviewFragment : Fragment() {
                 it.reviewContent
             )
         })
+    }
+
+    private fun manageResourceFailure(message: String) {
+        progressBar.visibility = View.GONE
+        Toast.makeText(
+            requireContext(),
+            message,
+            Toast.LENGTH_SHORT
+        ).show()
     }
 
 }

@@ -28,10 +28,6 @@ class MainFragment : Fragment(), OnMovieClickListener {
 
     private val viewModel by viewModels<MainViewModel>()
 
-    override fun onCreate(savedInstanceState: Bundle?) {
-        super.onCreate(savedInstanceState)
-    }
-
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?
@@ -43,7 +39,16 @@ class MainFragment : Fragment(), OnMovieClickListener {
         super.onViewCreated(view, savedInstanceState)
         setupRecyclerView()
         viewModel.deleteExpiredDownloadedMovies()
-        // Fetch from server
+        fetchFromServer()
+        displayFromLocal()
+    }
+
+    private fun setupRecyclerView() {
+        rv_movies.setHasFixedSize(true)
+        rv_movies.layoutManager = GridLayoutManager(context, 2, RecyclerView.VERTICAL, false)
+    }
+
+    private fun fetchFromServer() {
         viewModel.fetchMoviesList.observe(viewLifecycleOwner, Observer { result ->
             when (result) {
                 is Resource.Loading -> {
@@ -52,11 +57,9 @@ class MainFragment : Fragment(), OnMovieClickListener {
                 is Resource.Success -> {
                     progressBar.visibility = View.GONE
                     downloadMoviesList(result.data)
-                    rv_movies.adapter = MainAdapter(requireContext(), result.data, this)
                 }
                 is Resource.Failure -> {
                     if (!verifyAvailableNetwork(requireActivity() as AppCompatActivity)) {
-                        displayFromLocal()
                         manageResourceFailure(getString(R.string.no_internet_connection_message))
                     } else
                         manageResourceFailure(getString(R.string.reviews_label, result.exception))
@@ -65,15 +68,7 @@ class MainFragment : Fragment(), OnMovieClickListener {
         })
     }
 
-    private fun verifyAvailableNetwork(activity: AppCompatActivity): Boolean {
-        val connectivityManager =
-            activity.getSystemService(Context.CONNECTIVITY_SERVICE) as ConnectivityManager
-        val networkInfo = connectivityManager.activeNetworkInfo
-        return networkInfo != null && networkInfo.isConnected
-    }
-
     private fun displayFromLocal() {
-        // display room content
         viewModel.fetchDownloadedMoviesList().observe(viewLifecycleOwner, Observer { result ->
             when (result) {
                 is Resource.Loading -> {
@@ -103,6 +98,13 @@ class MainFragment : Fragment(), OnMovieClickListener {
         })
     }
 
+    private fun verifyAvailableNetwork(activity: AppCompatActivity): Boolean {
+        val connectivityManager =
+            activity.getSystemService(Context.CONNECTIVITY_SERVICE) as ConnectivityManager
+        val networkInfo = connectivityManager.activeNetworkInfo
+        return networkInfo != null && networkInfo.isConnected
+    }
+
     private fun manageResourceFailure(message: String) {
         progressBar.visibility = View.GONE
         Toast.makeText(
@@ -110,17 +112,6 @@ class MainFragment : Fragment(), OnMovieClickListener {
             message,
             Toast.LENGTH_SHORT
         ).show()
-    }
-
-    override fun onMovieClick(movie: Movie) {
-        val bundle = Bundle()
-        bundle.putParcelable("movie", movie)
-        findNavController().navigate(R.id.action_mainFragment_to_detailFragment, bundle)
-    }
-
-    private fun setupRecyclerView() {
-        rv_movies.setHasFixedSize(true)
-        rv_movies.layoutManager = GridLayoutManager(context, 2, RecyclerView.VERTICAL, false)
     }
 
     private fun downloadMoviesList(moviesList: List<Movie>) {
@@ -139,5 +130,11 @@ class MainFragment : Fragment(), OnMovieClickListener {
                 )
             )
         }
+    }
+
+    override fun onMovieClick(movie: Movie) {
+        val bundle = Bundle()
+        bundle.putParcelable("movie", movie)
+        findNavController().navigate(R.id.action_mainFragment_to_detailFragment, bundle)
     }
 }

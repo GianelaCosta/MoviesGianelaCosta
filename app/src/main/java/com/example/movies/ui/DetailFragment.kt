@@ -43,19 +43,23 @@ class DetailFragment : Fragment() {
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
-        viewModel.fetchMovieDetail(movie.id).observe(viewLifecycleOwner, Observer { result ->
+        fetchFromServer(movie.id)
+    }
+
+    private fun fetchFromServer(movieId: Int) {
+        viewModel.fetchMovieDetail(movieId).observe(viewLifecycleOwner, Observer { result ->
             when (result) {
                 is Resource.Loading -> {
                     progressBarMovieDetail.visibility = View.VISIBLE
                 }
                 is Resource.Success -> {
                     downloadMovieDetail(result.data)
-                    displayContent(result.data)
+                    displayFromLocal(movieId)
                 }
                 is Resource.Failure -> {
                     if (!verifyAvailableNetwork(requireActivity() as AppCompatActivity)) {
                         manageResourceFailure(getString(R.string.no_internet_connection_message))
-                        displayFromLocal()
+                        displayFromLocal(movieId)
                     } else
                         manageResourceFailure(getString(R.string.error_message, result.exception))
                 }
@@ -79,9 +83,8 @@ class DetailFragment : Fragment() {
         )
     }
 
-    private fun displayFromLocal() {
-        // display room content
-        viewModel.fetchDownloadedMovieDetail(movie.id)
+    private fun displayFromLocal(movieId: Int) {
+        viewModel.fetchDownloadedMovieDetail(movieId)
             .observe(viewLifecycleOwner, Observer { result ->
                 when (result) {
                     is Resource.Loading -> {
@@ -125,26 +128,28 @@ class DetailFragment : Fragment() {
         ).show()
     }
 
-    private fun displayContent(movie: Movie) {
+    private fun displayContent(movieToDisplay: Movie) {
         progressBarMovieDetail.visibility = View.GONE
-        Glide.with(this).load(getString(R.string.image_base_url, movie.backdropPath)).centerCrop()
+        Glide.with(this).load(getString(R.string.image_base_url, movieToDisplay.backdropPath))
+            .centerCrop()
             .into(img_movie_backdrop)
-        Glide.with(this).load(getString(R.string.image_base_url, movie.imagePath)).fitCenter()
+        Glide.with(this).load(getString(R.string.image_base_url, movieToDisplay.imagePath))
+            .fitCenter()
             .into(img_movie)
-        movie_title.text = movie.name
-        movie_popularity.text = getString(R.string.popularity_text, movie.popularity)
+        movie_title.text = movieToDisplay.name
+        movie_popularity.text = getString(R.string.popularity_text, movieToDisplay.popularity)
         var genresText = ""
-        for (genre in movie.genres!!) {
+        for (genre in movieToDisplay.genres!!) {
             genresText += " " + genre.genreName
         }
         movie_genres.text = genresText
-        movie_ratingNo.text = movie.rate.toString()
-        movie_rating.rating = movie.rate / 2
-        movie_detail.text = movie.description
+        movie_ratingNo.text = movieToDisplay.rate.toString()
+        movie_rating.rating = movieToDisplay.rate / 2
+        movie_detail.text = movieToDisplay.description
 
         btn_show_reviews.setOnClickListener {
             val bundle = Bundle()
-            bundle.putParcelable("movie", movie)
+            bundle.putParcelable("movie", movieToDisplay)
             findNavController().navigate(R.id.action_detailFragment_to_revirewFragment, bundle)
         }
     }
