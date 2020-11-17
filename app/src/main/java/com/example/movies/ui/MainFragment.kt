@@ -4,7 +4,6 @@ import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.viewModels
@@ -18,6 +17,7 @@ import com.example.movies.data.model.MovieEntity
 import com.example.movies.ui.MainAdapter.OnMovieClickListener
 import com.example.movies.ui.viewModel.MainViewModel
 import com.example.movies.vo.Resource
+import com.google.android.material.snackbar.Snackbar
 import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.android.synthetic.main.fragment_main.*
 
@@ -57,10 +57,21 @@ class MainFragment : Fragment(), OnMovieClickListener {
                     downloadMoviesList(result.data)
                 }
                 is Resource.Failure -> {
+                    progressBar.visibility = View.GONE
                     if (!verifyAvailableNetwork(requireActivity() as AppCompatActivity)) {
-                        manageResourceFailure(getString(R.string.no_internet_connection_message))
+                        Snackbar.make(
+                            requireView(),
+                            R.string.no_internet_connection_message,
+                            Snackbar.LENGTH_INDEFINITE
+                        )
+                            .setAction("Dismiss") {
+                                //dismiss
+                            }.show()
                     } else
-                        manageResourceFailure(getString(R.string.reviews_label, result.exception))
+                        manageResourceFailure(
+                            getString(R.string.reviews_label, result.exception),
+                            requireContext()
+                        )
                 }
             }
         })
@@ -90,19 +101,14 @@ class MainFragment : Fragment(), OnMovieClickListener {
                     rv_movies.adapter = MainAdapter(requireContext(), list, this)
                 }
                 is Resource.Failure -> {
-                    manageResourceFailure(getString(R.string.reviews_label, result.exception))
+                    progressBar.visibility = View.GONE
+                    manageResourceFailure(
+                        getString(R.string.reviews_label, result.exception),
+                        requireContext()
+                    )
                 }
             }
         })
-    }
-
-    private fun manageResourceFailure(message: String) {
-        progressBar.visibility = View.GONE
-        Toast.makeText(
-            requireContext(),
-            message,
-            Toast.LENGTH_SHORT
-        ).show()
     }
 
     private fun downloadMoviesList(moviesList: List<Movie>) {

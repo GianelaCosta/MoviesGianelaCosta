@@ -4,7 +4,6 @@ import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.viewModels
@@ -55,11 +54,14 @@ class DetailFragment : Fragment() {
                     displayFromLocal(movieId)
                 }
                 is Resource.Failure -> {
+                    progressBarMovieDetail.visibility = View.GONE
                     if (!verifyAvailableNetwork(requireActivity() as AppCompatActivity)) {
-                        manageResourceFailure(getString(R.string.no_internet_connection_message))
                         displayFromLocal(movieId)
                     } else
-                        manageResourceFailure(getString(R.string.error_message, result.exception))
+                        manageResourceFailure(
+                            getString(R.string.error_message, result.exception),
+                            requireContext()
+                        )
                 }
             }
         })
@@ -104,20 +106,24 @@ class DetailFragment : Fragment() {
                         displayContent(movie)
                     }
                     is Resource.Failure -> {
-                        manageResourceFailure(getString(R.string.error_message, result.exception))
+                        progressBarMovieDetail.visibility = View.GONE
+                        manageResourceFailure(
+                            getString(R.string.error_message, result.exception),
+                            requireContext()
+                        )
                     }
                 }
             })
     }
 
-    private fun manageResourceFailure(message: String) {
-        progressBarMovieDetail.visibility = View.GONE
-        Toast.makeText(
-            requireContext(),
-            message,
-            Toast.LENGTH_SHORT
-        ).show()
-    }
+//    private fun manageResourceFailure(message: String) {
+//        progressBarMovieDetail.visibility = View.GONE
+//        Toast.makeText(
+//            requireContext(),
+//            message,
+//            Toast.LENGTH_SHORT
+//        ).show()
+//    }
 
     private fun displayContent(movieToDisplay: Movie) {
         progressBarMovieDetail.visibility = View.GONE

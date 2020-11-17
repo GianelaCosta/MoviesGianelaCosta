@@ -4,7 +4,6 @@ import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.viewModels
@@ -69,11 +68,14 @@ class ReviewFragment : Fragment() {
                     displayFromLocal(movieId)
                 }
                 is Resource.Failure -> {
+                    progressBar.visibility = View.GONE
                     if (!verifyAvailableNetwork(requireActivity() as AppCompatActivity)) {
                         displayFromLocal(movieId)
-                        manageResourceFailure("You don't have internet connection, showing saved data form your last section")
                     } else
-                        manageResourceFailure("An error occurred while loading data ${result.exception}")
+                        manageResourceFailure(
+                            getString(R.string.error_message, result.exception),
+                            requireContext()
+                        )
                 }
             }
         })
@@ -89,7 +91,7 @@ class ReviewFragment : Fragment() {
                     }
                     is Resource.Success -> {
                         progressBar.visibility = View.GONE
-                        Glide.with(this).load("https://image.tmdb.org/t/p/w500" + movie.imagePath)
+                        Glide.with(this).load(getString(R.string.image_base_url, movie.imagePath))
                             .fitCenter().into(img_movie)
                         txt_reviews_found.text =
                             getString(R.string.reviews_label, result.data.size.toString())
@@ -103,7 +105,11 @@ class ReviewFragment : Fragment() {
                         rv_reviews.adapter = ReviewAdapter(requireContext(), list)
                     }
                     is Resource.Failure -> {
-                        manageResourceFailure("An error occurred while loading data ${result.exception}")
+                        progressBar.visibility = View.GONE
+                        manageResourceFailure(
+                            getString(R.string.error_message, result.exception),
+                            requireContext()
+                        )
                     }
                 }
             })
@@ -120,13 +126,12 @@ class ReviewFragment : Fragment() {
         })
     }
 
-    private fun manageResourceFailure(message: String) {
-        progressBar.visibility = View.GONE
-        Toast.makeText(
-            requireContext(),
-            message,
-            Toast.LENGTH_SHORT
-        ).show()
-    }
+//    private fun manageResourceFailure(message: String) {
+//        Toast.makeText(
+//            requireContext(),
+//            message,
+//            Toast.LENGTH_SHORT
+//        ).show()
+//    }
 
 }
