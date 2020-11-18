@@ -16,8 +16,10 @@ android {
         targetSdkVersion 29
         versionCode 1
         versionName "1.0"
-       // testInstrumentationRunner "androidx.test.runner.AndroidJUnitRunner"
+        buildConfigField "String", "API_KEY", API_KEY
+        buildConfigField "String", "API_URL", API_URL
         testInstrumentationRunner "com.example.HiltTestRunner"
+
     }
 
     buildTypes {

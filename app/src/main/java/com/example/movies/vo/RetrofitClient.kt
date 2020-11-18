@@ -1,5 +1,6 @@
 package com.example.movies.vo
 
+import com.example.movies.BuildConfig
 import com.example.movies.domain.WebService
 import com.facebook.stetho.okhttp3.StethoInterceptor
 import com.google.gson.GsonBuilder
@@ -8,7 +9,8 @@ import okhttp3.OkHttpClient
 import retrofit2.Retrofit
 import retrofit2.converter.gson.GsonConverterFactory
 
-const val API_KEY = "52b7001946c183203509dceff3469d89"
+private const val API_KEY: String = BuildConfig.API_KEY
+private const val API_URL: String = BuildConfig.API_URL
 
 object RetrofitClient {
 
@@ -35,7 +37,7 @@ object RetrofitClient {
     val webservice: WebService by lazy {
         Retrofit.Builder()
             .client(client)
-            .baseUrl("https://api.themoviedb.org/3/")
+            .baseUrl(API_URL)
             .addConverterFactory(GsonConverterFactory.create(GsonBuilder().create()))
             .client(client)
             .build().create(WebService::class.java)
