@@ -20,15 +20,29 @@ class ReviewViewModelTest {
     var mainCoroutineRule = MainCoroutineRule()
 
     private lateinit var viewModel: ReviewViewModel
+    private lateinit var fakeRepoImpl: FakeRepoImpl
+    private val movieId = 635302
 
     @Before
     fun setup() {
-        viewModel = ReviewViewModel(FakeRepoImpl())
+        fakeRepoImpl = FakeRepoImpl()
+        viewModel = ReviewViewModel(fakeRepoImpl)
     }
 
     @Test
     fun fetchReviewsList() {
-        assertThat(Result.success(viewModel.fetchReviewsList(635302)))
+        assertThat(Result.success(viewModel.fetchReviewsList(movieId)))
+    }
+
+    @Test
+    fun fetchReviewsListFailNoNetwork() {
+        fakeRepoImpl.setShouldReturnNetworkError(true)
+        assertThat(viewModel.fetchReviewsList(movieId) == Exception("Error"))
+    }
+
+    @Test
+    fun fetchReviewsListFailNoMovieFound() {
+        assertThat(viewModel.fetchReviewsList(11) == Exception("Error"))
     }
 
     @Test
@@ -57,6 +71,17 @@ class ReviewViewModelTest {
 
     @Test
     fun fetchDownloadedReviewsList() {
-        assertThat(Result.success(viewModel.fetchDownloadedReviewsList(635302)))
+        assertThat(Result.success(viewModel.fetchDownloadedReviewsList(movieId)))
+    }
+
+    @Test
+    fun fetchDownloadedReviewsListFailNoNetwork() {
+        fakeRepoImpl.setShouldReturnNetworkError(true)
+        assertThat(viewModel.fetchDownloadedReviewsList(movieId) == Exception("Error"))
+    }
+
+    @Test
+    fun fetchDownloadedReviewsListFailNoMovieFound() {
+        assertThat(viewModel.fetchDownloadedReviewsList(11) == Exception("Error"))
     }
 }

@@ -116,15 +116,6 @@ class DetailFragment : Fragment() {
             })
     }
 
-//    private fun manageResourceFailure(message: String) {
-//        progressBarMovieDetail.visibility = View.GONE
-//        Toast.makeText(
-//            requireContext(),
-//            message,
-//            Toast.LENGTH_SHORT
-//        ).show()
-//    }
-
     private fun displayContent(movieToDisplay: Movie) {
         progressBarMovieDetail.visibility = View.GONE
         Glide.with(this).load(getString(R.string.image_base_url, movieToDisplay.backdropPath))

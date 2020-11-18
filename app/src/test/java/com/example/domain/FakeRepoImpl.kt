@@ -1,6 +1,5 @@
 package com.example.domain
 
-import androidx.lifecycle.MutableLiveData
 import com.example.movies.data.model.*
 import com.example.movies.domain.Repo
 import com.example.movies.vo.Resource
@@ -108,9 +107,11 @@ class FakeRepoImpl : Repo {
         )
     )
 
-    private val observableMoviesList = MutableLiveData<List<Movie>>(movieList)
+    private var shouldReturnNetworkError = false
 
-    private val shouldReturnNetworkError = false
+    fun setShouldReturnNetworkError(networkAvailable: Boolean) {
+        shouldReturnNetworkError = networkAvailable
+    }
 
     override suspend fun getMoviesList(): Resource<List<Movie>> {
         return if (shouldReturnNetworkError) {

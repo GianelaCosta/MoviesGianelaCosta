@@ -21,15 +21,30 @@ class DetailViewModelTest {
     var mainCoroutineRule = MainCoroutineRule()
 
     private lateinit var viewModel: DetailViewModel
+    private lateinit var fakeRepoImpl: FakeRepoImpl
+
+    private val movieId = 635302
 
     @Before
     fun setup() {
-        viewModel = DetailViewModel(FakeRepoImpl())
+        fakeRepoImpl = FakeRepoImpl()
+        viewModel = DetailViewModel(fakeRepoImpl)
     }
 
     @Test
     fun fetchMovieDetail() {
-        assertThat(Result.success(viewModel.fetchMovieDetail(635302)))
+        assertThat(Result.success(viewModel.fetchMovieDetail(movieId)))
+    }
+
+    @Test
+    fun fetchMovieDetailFailNoNetwork() {
+        fakeRepoImpl.setShouldReturnNetworkError(true)
+        assertThat(viewModel.fetchMovieDetail(movieId) == (Exception()))
+    }
+
+    @Test
+    fun fetchMovieDetailFailNoMovieFound() {
+        assertThat(viewModel.fetchMovieDetail(12) == (Exception()))
     }
 
     @Test
@@ -55,6 +70,12 @@ class DetailViewModelTest {
 
     @Test
     fun fetchDownloadedMovieDetail() {
-        assertThat(Result.success(viewModel.fetchDownloadedMovieDetail(635302)))
+        assertThat(Result.success(viewModel.fetchDownloadedMovieDetail(movieId)))
+    }
+
+    @Test
+    fun fetchDownloadedMovieDetailFail() {
+        fakeRepoImpl.setShouldReturnNetworkError(true)
+        assertThat(viewModel.fetchDownloadedMovieDetail(movieId) == (Exception()))
     }
 }

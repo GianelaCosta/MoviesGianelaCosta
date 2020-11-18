@@ -126,12 +126,4 @@ class ReviewFragment : Fragment() {
         })
     }
 
-//    private fun manageResourceFailure(message: String) {
-//        Toast.makeText(
-//            requireContext(),
-//            message,
-//            Toast.LENGTH_SHORT
-//        ).show()
-//    }
-
 }

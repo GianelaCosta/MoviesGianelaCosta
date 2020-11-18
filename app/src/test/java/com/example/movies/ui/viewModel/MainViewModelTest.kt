@@ -21,15 +21,23 @@ class MainViewModelTest {
     var mainCoroutineRule = MainCoroutineRule()
 
     private lateinit var viewModel: MainViewModel
+    private lateinit var fakeRepoImpl: FakeRepoImpl
 
     @Before
     fun setup() {
-        viewModel = MainViewModel(FakeRepoImpl())
+        fakeRepoImpl = FakeRepoImpl()
+        viewModel = MainViewModel(fakeRepoImpl)
     }
 
     @Test
     fun fetchMovieList() {
         assertThat(Result.success(viewModel.fetchMoviesList))
+    }
+
+    @Test
+    fun fetchMovieListFail() {
+        fakeRepoImpl.setShouldReturnNetworkError(true)
+        assertThat(viewModel.fetchMoviesList == Exception("Error"))
     }
 
     @Test
@@ -56,6 +64,12 @@ class MainViewModelTest {
     @Test
     fun fetchDownloadedMoviesList() {
         assertThat(Result.success(viewModel.fetchDownloadedMoviesList()))
+    }
+
+    @Test
+    fun fetchDownloadedMoviesListFail() {
+        fakeRepoImpl.setShouldReturnNetworkError(true)
+        assertThat(viewModel.fetchDownloadedMoviesList() == Exception("Error"))
     }
 
     @Test
