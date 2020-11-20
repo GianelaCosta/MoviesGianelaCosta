@@ -21,6 +21,7 @@ import com.google.android.material.snackbar.Snackbar
 import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.android.synthetic.main.fragment_main.*
 
+
 @AndroidEntryPoint
 class MainFragment : Fragment(), OnMovieClickListener {
 
